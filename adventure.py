@@ -91,7 +91,7 @@ def enter_dungeon(player_stats, inventory, dungeon_rooms, clues, artifacts):
     each room which is a tuple in the list"""
     smart = False
     for room in dungeon_rooms:
-        print("Entering... " + room[0])
+        print("You enter the " + room[0])
         if room[0]=="Cryptic Library":
             possible_clues = {
                 "The treasure is buried beneath the old oak tree.",
@@ -102,9 +102,9 @@ def enter_dungeon(player_stats, inventory, dungeon_rooms, clues, artifacts):
             random_clues = random.sample(list(possible_clues), 2)
             clues.add(random_clues)
             artifact_name = "staff_of_wisdom"
-            if artifact_name in artifacts:
+            if artifact_name in inventory:
                 smart = True
-                print("The player understands the meaning of the clues and can now bypass a puzzle challenge in one of the other rooms")
+                print("The Staff of Wisdom hums in your hand")
         if room[1] != "None":
             #Using this to test tuple for first room
             test=0
@@ -160,10 +160,11 @@ def enter_dungeon(player_stats, inventory, dungeon_rooms, clues, artifacts):
     display_player_status(player_stats)
     return player_stats, inventory, clues
 
-def discover_artifact(player_stats, artifacts, artifact_name):
+def discover_artifact(player_stats, artifacts, artifact_name, inventory):
     if artifact_name in artifacts:
             artifact = artifacts[artifact_name]
             print("You have found " + str(artifact["description"]))
+            inventory = acquire_item(inventory, artifact)
             if(artifact["effect"] == "increases health"):
                 player_stats["health"] = player_stats["health"] + int(artifact["power"])
             if(artifact["effect"] == "enhances attack"):
@@ -284,7 +285,7 @@ def main():
 
                 player_stats, artifacts = discover_artifact(
 
-                    player_stats, artifacts, artifact_name)
+                    player_stats, artifacts, artifact_name, inventory)
 
                 display_player_status(player_stats)
 
